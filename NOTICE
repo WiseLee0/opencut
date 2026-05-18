@@ -1,0 +1,57 @@
+视频编辑器 — Third-Party Notices
+================================
+
+本插件基于以下开源项目构建。所有第三方组件版权归各自作者所有。
+
+------------------------------------------------------------------------
+OpenCut
+------------------------------------------------------------------------
+Project : https://github.com/OpenCut-app/OpenCut
+License : MIT
+Notes   : 本插件的编辑器核心（时间轴、面板布局、命令系统、渲染管线、
+          字幕等）派生自 OpenCut。原始 MIT 许可证文本见同目录 LICENSE。
+          "OpenCut" 名称为上游项目所有，本插件未使用其名称作为品牌。
+
+------------------------------------------------------------------------
+opencut-wasm
+------------------------------------------------------------------------
+Package : opencut-wasm (npm)
+Repo    : https://github.com/opencut/opencut
+License : MIT
+Notes   : 视频编辑核心逻辑的 WebAssembly 实现，作为运行时依赖使用。
+
+------------------------------------------------------------------------
+mediabunny
+------------------------------------------------------------------------
+Package : mediabunny (npm) by Vanilagy
+Repo    : https://github.com/Vanilagy/mediabunny
+License : MPL-2.0
+Notes   : 媒体解码 / 复用 / 转码引擎，作为未修改的运行时依赖使用。
+          根据 MPL-2.0 §3.3，本插件仅以二进制形式分发 mediabunny，
+          其源码可在上述仓库获取。如对 mediabunny 源码本身进行修改，
+          修改部分须按 MPL-2.0 第 3 节继续以 MPL-2.0 开源。
+
+------------------------------------------------------------------------
+@huggingface/transformers
+------------------------------------------------------------------------
+Package : @huggingface/transformers (npm)
+Repo    : https://github.com/huggingface/transformers.js
+License : Apache-2.0
+Notes   : 端上 Whisper 模型推理，用于字幕自动生成。
+
+------------------------------------------------------------------------
+其他依赖
+------------------------------------------------------------------------
+本项目还使用了 React、Radix UI、TailwindCSS、Zustand、Sonner、Lucide、
+HugeIcons、Wavesurfer.js、SoundTouchJS 等众多开源库，许可证均为
+MIT / ISC / Apache-2.0 / BSD 系列宽松协议。完整清单可通过
+`pnpm licenses list` 生成。
+
+------------------------------------------------------------------------
+本插件原创部分
+------------------------------------------------------------------------
+- src/hub/* — Hub 画布双向桥接代码
+- src/embed-editor.tsx — 嵌入式入口组件
+- plugin-package/manifest.json — Hub 插件清单
+- plugin-package/icon.svg — 插件图标
+Copyright (c) 2026 qidian，按本仓库 LICENSE（MIT）授权。

@@ -1,0 +1,12 @@
+{
+  "id": "video-editor",
+  "name": "视频编辑器",
+  "description": "嵌入式时间轴视频编辑器（基于开源 OpenCut 二次开发）：从画布连接的素材直接导入，拖拽合成、剪辑、加字幕、加特效，导出后一键插回画布。",
+  "details": "基于开源项目 OpenCut（MIT 协议，github.com/OpenCut-app/OpenCut）二次开发，作为 Hub 画布节点跑起来——不用切到外部 App，画布上素材、字幕、特效流水线自洽。\n\n核心能力\n\n- 三栏布局：左侧资源面板、中部预览、右侧属性面板，下方是多轨道时间线；面板宽高拖拽自适应，状态本地持久化。\n- 多轨道时间轴：视频/音频/字幕/贴纸/文字分轨编辑，支持剪切、分割、复制粘贴、波纹删除（ripple）、变速、淡入淡出、关键帧。\n- 渲染管线：WASM (opencut-wasm) + mediabunny 解码混流，导出 WebM（VP9 / AV1，免专利）。H.264 / HEVC / MP4 的解码与编码依赖浏览器原生 WebCodecs 能力，相应专利由浏览器厂商承担。\n- 字幕与转录：内置 OpenAI Whisper 模型（MIT）通过 @huggingface/transformers（Apache-2.0）端上语音转文字，自动生成可编辑字幕轨；支持 SRT/VTT 导入导出。\n- 特效与遮罩：调色、模糊、色度键、形状/路径遮罩、文本动画、转场；所有参数实时预览。\n- 资源管理：拖入本地文件、粘贴剪贴板素材、从 Hub 画布上连接的图片/视频/音频节点自动同步进入资源面板，删除连接即同步删除。\n- 与 Hub 深度集成：locale 跟随宿主切换；渲染输出可直接作为新节点插回画布。\n- 离线友好：核心引擎和 Whisper 模型在浏览器内运行，断网状态下仍可剪辑与导出（首次需联网下载模型）。\n\n适用场景\n\n短视频剪辑、字幕生成与校对、教学/演示视频后期、素材片段化拼接、跨节点流水线（生成模型出图 → 编辑器拼合 → 回插画布做下游处理）。\n\n开源许可与归属\n\n本插件基于 MIT 协议开源。第三方组件：OpenCut (MIT)、opencut-wasm (MIT，OpenCut 项目编译子包)、mediabunny (MPL-2.0)、@huggingface/transformers (Apache-2.0)、OpenAI Whisper 模型 (MIT)。完整版权与许可信息见插件目录内的 LICENSE 与 NOTICE 文件。",
+  "tags": ["video", "editor", "timeline", "subtitle", "视频编辑", "字幕"],
+  "version": "0.1.0",
+  "icon": "icon.svg",
+  "entry": "index.html",
+  "width": 1440,
+  "height": 900
+}
