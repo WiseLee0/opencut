@@ -8,6 +8,7 @@ import {
 	DEFAULT_TRANSCRIPTION_MODEL,
 	TRANSCRIPTION_MODELS,
 } from "@/transcription/models";
+import { snapshotCdnConfig } from "@/hub/cdn-config";
 import type { WorkerMessage, WorkerResponse } from "./worker";
 
 type ProgressCallback = (progress: TranscriptionProgress) => void;
@@ -154,7 +155,11 @@ class TranscriptionService {
 
 			this.worker.postMessage({
 				type: "init",
-				modelId: model.huggingFaceId,
+				// `cdnSlug` (not `huggingFaceId`) — our CDN stores Whisper
+				// dumps under the bare model name, e.g. `whisper-tiny`
+				// rather than `onnx-community/whisper-tiny`.
+				modelId: model.cdnSlug,
+				cdnConfig: snapshotCdnConfig(),
 			} satisfies WorkerMessage);
 		});
 	}

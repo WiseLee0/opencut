@@ -1,4 +1,5 @@
 import {
+	env,
 	pipeline,
 	type AutomaticSpeechRecognitionPipeline,
 	type AutomaticSpeechRecognitionOutput,
@@ -8,9 +9,10 @@ import {
 	DEFAULT_CHUNK_LENGTH_SECONDS,
 	DEFAULT_STRIDE_SECONDS,
 } from "@/transcription/audio";
+import type { CdnConfigSnapshot } from "@/hub/cdn-config";
 
 export type WorkerMessage =
-	| { type: "init"; modelId: string }
+	| { type: "init"; modelId: string; cdnConfig: CdnConfigSnapshot }
 	| { type: "transcribe"; audio: Float32Array; language: string }
 	| { type: "cancel" };
 
@@ -37,7 +39,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
 	switch (message.type) {
 		case "init":
-			await handleInit({ modelId: message.modelId });
+			await handleInit({ modelId: message.modelId, cdnConfig: message.cdnConfig });
 			break;
 		case "transcribe":
 			await handleTranscribe({
@@ -52,9 +54,37 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 	}
 };
 
-async function handleInit({ modelId }: { modelId: string }) {
+/**
+ * Point @huggingface/transformers at our regional CDN. Must run BEFORE
+ * `pipeline()` so the first model file fetch already uses the right
+ * host; setting it later is too late — ORT will have requested its
+ * wasm from jsdelivr and the model JSON from huggingface.co.
+ *
+ * URL construction inside transformers.js:
+ *   pathJoin(remoteHost, remotePathTemplate({model,revision}), filename)
+ * With remoteHost = `${cdnBase}staging` and template = `{model}/`, a
+ * Whisper request becomes `${cdnBase}staging/<cdnSlug>/<file>`, matching
+ * the layout we ship under `plugins-hub/opencut-embed/staging/`.
+ */
+function applyCdnConfig(cdnConfig: CdnConfigSnapshot): void {
+	env.remoteHost = `${cdnConfig.cdnBase}staging`;
+	env.remotePathTemplate = "{model}/";
+	if (env.backends?.onnx?.wasm) {
+		env.backends.onnx.wasm.wasmPaths = `${cdnConfig.cdnBase}ort/`;
+	}
+}
+
+async function handleInit({
+	modelId,
+	cdnConfig,
+}: {
+	modelId: string;
+	cdnConfig: CdnConfigSnapshot;
+}) {
 	lastReportedProgress = -1;
 	fileBytes.clear();
+
+	applyCdnConfig(cdnConfig);
 
 	try {
 		transcriber = (await pipeline("automatic-speech-recognition", modelId, {

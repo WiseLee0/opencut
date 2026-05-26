@@ -37,6 +37,13 @@ export interface TranscriptionModel {
 	id: TranscriptionModelId;
 	name: string;
 	huggingFaceId: string;
+	/**
+	 * Folder name under `plugins-hub/opencut-embed/staging/` on the CDN.
+	 * Usually matches the bare model name (`whisper-tiny`), but the
+	 * medium ONNX dump is stored under `whisper-medium-ONNX` so we keep
+	 * an explicit mapping here rather than guessing from `huggingFaceId`.
+	 */
+	cdnSlug: string;
 	description: string;
 }
 

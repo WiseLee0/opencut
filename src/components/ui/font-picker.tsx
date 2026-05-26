@@ -13,6 +13,7 @@ import { loadFullFont } from "@/fonts/google-fonts";
 import { SYSTEM_FONTS } from "@/fonts/system-fonts";
 import type { FontAtlas, FontAtlasEntry } from "@/fonts/types";
 import { useFontAtlas } from "@/fonts/use-font-atlas";
+import { getPublicAssetUrl } from "@/hub/cdn-config";
 import { cn } from "@/utils/ui";
 import { useT } from "@/i18n";
 import { ChevronDown, Search } from "lucide-react";
@@ -194,7 +195,7 @@ export function FontPicker({
 }
 
 function FontSpritePreview({ entry }: { entry: FontAtlasEntry }) {
-	const chunkUrl = `${import.meta.env.BASE_URL}fonts/font-chunk-${entry.ch}.avif`;
+	const chunkUrl = getPublicAssetUrl(`fonts/font-chunk-${entry.ch}.avif`);
 	return (
 		<div
 			className="shrink-0"

@@ -8,24 +8,28 @@ export const TRANSCRIPTION_MODELS: TranscriptionModel[] = [
 		id: "whisper-tiny",
 		name: "Tiny",
 		huggingFaceId: "onnx-community/whisper-tiny",
+		cdnSlug: "whisper-tiny",
 		description: "Fastest, lower accuracy",
 	},
 	{
 		id: "whisper-small",
 		name: "Small",
 		huggingFaceId: "onnx-community/whisper-small",
+		cdnSlug: "whisper-small",
 		description: "Good balance of speed and accuracy",
 	},
 	{
 		id: "whisper-medium",
 		name: "Medium",
 		huggingFaceId: "onnx-community/whisper-medium",
+		cdnSlug: "whisper-medium-ONNX",
 		description: "Higher accuracy, slower",
 	},
 	{
 		id: "whisper-large-v3-turbo",
 		name: "Large v3 Turbo",
 		huggingFaceId: "onnx-community/whisper-large-v3-turbo",
+		cdnSlug: "whisper-large-v3-turbo",
 		description: "Best accuracy, requires WebGPU for good performance",
 	},
 ];

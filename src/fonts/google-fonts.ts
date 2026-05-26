@@ -1,9 +1,14 @@
 import type { FontAtlas } from "@/fonts/types";
 import { SYSTEM_FONTS } from "@/fonts/system-fonts";
+import { getPublicAssetUrl } from "@/hub/cdn-config";
 
 const GOOGLE_FONTS_CSS = "https://fonts.googleapis.com/css2";
-const FONT_ATLAS_PATH = `${import.meta.env.BASE_URL}fonts/font-atlas.json`;
-const FONT_CHUNK_PATH_PREFIX = `${import.meta.env.BASE_URL}fonts/font-chunk-`;
+// Font atlas and chunks live on the regional CDN in production; resolved
+// per-call so a region flip mid-session (rare, but possible via the host
+// settings menu) is picked up by future loads without a restart.
+const FONT_ATLAS_PATH = (): string => getPublicAssetUrl("fonts/font-atlas.json");
+const FONT_CHUNK_PATH_PREFIX = (): string =>
+	getPublicAssetUrl("fonts/font-chunk-");
 
 const fullLoaded = new Set<string>();
 
@@ -28,7 +33,7 @@ export function loadFontAtlas(): Promise<FontAtlas | null> {
 	if (cachedAtlas) return Promise.resolve(cachedAtlas);
 	if (atlasFetchPromise) return atlasFetchPromise;
 
-	atlasFetchPromise = fetch(FONT_ATLAS_PATH)
+	atlasFetchPromise = fetch(FONT_ATLAS_PATH())
 		.then(async (response) => {
 			if (!response.ok) return null;
 			const data: FontAtlas = await response.json();
@@ -45,10 +50,11 @@ function preloadChunkImages({ atlas }: { atlas: FontAtlas }): void {
 	const maxChunk = Math.max(
 		...Object.values(atlas.fonts).map((entry) => entry.ch),
 	);
+	const chunkPrefix = FONT_CHUNK_PATH_PREFIX();
 	for (let i = 0; i <= maxChunk; i++) {
 		// hint browser to preload chunk images without blocking
 		const img = new Image();
-		img.src = `${FONT_CHUNK_PATH_PREFIX}${i}.avif`;
+		img.src = `${chunkPrefix}${i}.avif`;
 	}
 }
 
